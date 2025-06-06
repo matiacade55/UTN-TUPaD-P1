@@ -1,32 +1,55 @@
+import time
+
+def productos_en_minusculas(lista):
+    for producto in lista:
+        producto["nombre"] = producto["nombre"].lower()
+    return lista
 
 def buscar_por_nombre_lineal(lista, nombre):
-    for producto in lista:
-        if producto["nombre"].lower() == nombre.lower():
-            return producto
 
-    return None
+    start = time.perf_counter()
+
+    for producto in lista:
+
+        if producto["nombre"]== nombre:
+            end = time.perf_counter()
+            return producto, (end - start) * 1000
+        
+    end = time.perf_counter()
+    
+    return None, (end - start) * 1000
 
 def clave_ordenamiento(lista):
-    return lista["nombre"].lower()
+    return lista["nombre"]
 
 def buscar_por_nombre_binario(lista, nombre):
+
+    start = time.perf_counter()
+
     inicio = 0
     final = len(lista) - 1
 
     while inicio <= final:
         medio = (inicio + final) // 2 # Encontramos el punto medio de la lista
-        nombre_medio = lista[medio]["nombre"].lower() # Obtenemos el nombre del producto que esta en el medio y lo pasamos a minúsculas
-        nombre_buscado = nombre.lower()
+        nombre_medio = lista[medio]["nombre"] # Obtenemos el nombre del producto que esta en el medio.
+        nombre_buscado = nombre
 
         if nombre_medio == nombre_buscado:
-            return lista[medio] # Devuelve el producto encontrado en la posición medio
+            end = time.perf_counter()
+            return lista[medio], (end - start) * 1000 # Devuelve el producto encontrado en la posición medio
         elif nombre_medio < nombre_buscado:
             inicio = medio + 1 # Corremos el inicio hacia la derecha (el buscado esta en la mitad de la derecha)
         else:
             final = medio - 1 # Corremos el final hacia la izquierda (el buscado esta en la mitad de la izquierda)
     
-    return None
+    return None, (end - start) * 1000
 
+def medir_tiempo_promedio(funcion, lista, nombre, repeticiones=1000):
+    total_tiempo = 0
+    for _ in range(repeticiones):
+        _, tiempo = funcion(lista, nombre)
+        total_tiempo += tiempo
+    return total_tiempo / repeticiones
 
 lista_productos_10 = [
     {"id": "0001", "nombre": "Aceite", "precio": 2500.00, "vencimiento": "2025-11-05"},
@@ -144,27 +167,558 @@ lista_productos_100 = [
     {"id": "0100", "nombre": "Pizzas congeladas", "precio": 3000.00, "vencimiento": "2027-03-25"}
 ]
 
+lista_productos_500 = [
+    {"id": "0001", "nombre": "Aceite", "precio": 2500.00, "vencimiento": "2025-11-05"},
+    {"id": "0002", "nombre": "Arroz", "precio": 1200.50, "vencimiento": "2025-11-10"},
+    {"id": "0003", "nombre": "Leche", "precio": 1800.75, "vencimiento": "2025-11-15"},
+    {"id": "0004", "nombre": "Pan", "precio": 900.25, "vencimiento": "2025-11-20"},
+    {"id": "0005", "nombre": "Huevos", "precio": 2200.00, "vencimiento": "2025-11-25"},
+    {"id": "0006", "nombre": "Azucar", "precio": 1500.90, "vencimiento": "2025-11-30"},
+    {"id": "0007", "nombre": "Cafe", "precio": 3000.10, "vencimiento": "2025-12-05"},
+    {"id": "0008", "nombre": "Fideos", "precio": 1100.80, "vencimiento": "2025-12-10"},
+    {"id": "0009", "nombre": "Sal", "precio": 700.30, "vencimiento": "2025-12-15"},
+    {"id": "0010", "nombre": "Harina", "precio": 1000.65, "vencimiento": "2025-12-20"},
+    {"id": "0011", "nombre": "Gaseosa", "precio": 1900.40, "vencimiento": "2025-12-25"},
+    {"id": "0012", "nombre": "Jabon", "precio": 850.15, "vencimiento": "2025-12-30"},
+    {"id": "0013", "nombre": "Pasta dental", "precio": 1300.20, "vencimiento": "2026-01-04"},
+    {"id": "0014", "nombre": "Cereal", "precio": 2800.70, "vencimiento": "2026-01-09"},
+    {"id": "0015", "nombre": "Galletas", "precio": 750.95, "vencimiento": "2026-01-14"},
+    {"id": "0016", "nombre": "Tomate", "precio": 600.00, "vencimiento": "2026-01-19"},
+    {"id": "0017", "nombre": "Papa", "precio": 550.00, "vencimiento": "2026-01-24"},
+    {"id": "0018", "nombre": "Cebolla", "precio": 450.00, "vencimiento": "2026-01-29"},
+    {"id": "0019", "nombre": "Zanahoria", "precio": 500.00, "vencimiento": "2026-02-03"},
+    {"id": "0020", "nombre": "Manzana", "precio": 1200.00, "vencimiento": "2026-02-08"},
+    {"id": "0021", "nombre": "Naranja", "precio": 1100.00, "vencimiento": "2026-02-13"},
+    {"id": "0022", "nombre": "Banana", "precio": 1000.00, "vencimiento": "2026-02-18"},
+    {"id": "0023", "nombre": "Pollo", "precio": 4500.00, "vencimiento": "2026-02-23"},
+    {"id": "0024", "nombre": "Carne", "precio": 7000.00, "vencimiento": "2026-02-28"},
+    {"id": "0025", "nombre": "Pescado", "precio": 5500.00, "vencimiento": "2026-03-05"},
+    {"id": "0026", "nombre": "Queso", "precio": 3500.00, "vencimiento": "2026-03-10"},
+    {"id": "0027", "nombre": "Manteca", "precio": 1600.00, "vencimiento": "2026-03-15"},
+    {"id": "0028", "nombre": "Mermelada", "precio": 1400.00, "vencimiento": "2026-03-20"},
+    {"id": "0029", "nombre": "Chocolate", "precio": 1700.00, "vencimiento": "2026-03-25"},
+    {"id": "0030", "nombre": "Dulce de leche", "precio": 1900.00, "vencimiento": "2026-03-30"},
+    {"id": "0031", "nombre": "Yogur", "precio": 950.00, "vencimiento": "2026-04-04"},
+    {"id": "0032", "nombre": "Agua mineral", "precio": 700.00, "vencimiento": "2026-04-09"},
+    {"id": "0033", "nombre": "Jugo", "precio": 1500.00, "vencimiento": "2026-04-14"},
+    {"id": "0034", "nombre": "Cerveza", "precio": 1800.00, "vencimiento": "2026-04-19"},
+    {"id": "0035", "nombre": "Vino", "precio": 3000.00, "vencimiento": "2026-04-24"},
+    {"id": "0036", "nombre": "Detergente", "precio": 1200.00, "vencimiento": "2026-04-29"},
+    {"id": "0037", "nombre": "Lavandina", "precio": 900.00, "vencimiento": "2026-05-04"},
+    {"id": "0038", "nombre": "Escoba", "precio": 2000.00, "vencimiento": "2026-05-09"},
+    {"id": "0039", "nombre": "Trapo", "precio": 500.00, "vencimiento": "2026-05-14"},
+    {"id": "0040", "nombre": "Esponja", "precio": 300.00, "vencimiento": "2026-05-19"},
+    {"id": "0041", "nombre": "Servilletas", "precio": 600.00, "vencimiento": "2026-05-24"},
+    {"id": "0042", "nombre": "Papel higienico", "precio": 1400.00, "vencimiento": "2026-05-29"},
+    {"id": "0043", "nombre": "Shampoo", "precio": 1800.00, "vencimiento": "2026-06-03"},
+    {"id": "0044", "nombre": "Acondicionador", "precio": 1700.00, "vencimiento": "2026-06-08"},
+    {"id": "0045", "nombre": "Jabon de tocador", "precio": 400.00, "vencimiento": "2026-06-13"},
+    {"id": "0046", "nombre": "Crema de manos", "precio": 1100.00, "vencimiento": "2026-06-18"},
+    {"id": "0047", "nombre": "Desodorante", "precio": 900.00, "vencimiento": "2026-06-23"},
+    {"id": "0048", "nombre": "Enlatados", "precio": 800.00, "vencimiento": "2026-06-28"},
+    {"id": "0049", "nombre": "Lentejas", "precio": 1000.00, "vencimiento": "2026-07-03"},
+    {"id": "0050", "nombre": "Garbanzos", "precio": 950.00, "vencimiento": "2026-07-08"},
+    {"id": "0051", "nombre": "Atun", "precio": 1300.00, "vencimiento": "2026-07-13"},
+    {"id": "0052", "nombre": "Mayonesa", "precio": 850.00, "vencimiento": "2026-07-18"},
+    {"id": "0053", "nombre": "Mostaza", "precio": 700.00, "vencimiento": "2026-07-23"},
+    {"id": "0054", "nombre": "Ketchup", "precio": 900.00, "vencimiento": "2026-07-28"},
+    {"id": "0055", "nombre": "Vinagre", "precio": 500.00, "vencimiento": "2026-08-02"},
+    {"id": "0056", "nombre": "Especias", "precio": 600.00, "vencimiento": "2026-08-07"},
+    {"id": "0057", "nombre": "Pimienta", "precio": 700.00, "vencimiento": "2026-08-12"},
+    {"id": "0058", "nombre": "Oregano", "precio": 550.00, "vencimiento": "2026-08-17"},
+    {"id": "0059", "nombre": "Comino", "precio": 580.00, "vencimiento": "2026-08-22"},
+    {"id": "0060", "nombre": "Pimenton", "precio": 620.00, "vencimiento": "2026-08-27"},
+    {"id": "0061", "nombre": "Extracto de tomate", "precio": 900.00, "vencimiento": "2026-09-01"},
+    {"id": "0062", "nombre": "Caldo", "precio": 400.00, "vencimiento": "2026-09-06"},
+    {"id": "0063", "nombre": "Salsa de soja", "precio": 1100.00, "vencimiento": "2026-09-11"},
+    {"id": "0064", "nombre": "Aderezo", "precio": 800.00, "vencimiento": "2026-09-16"},
+    {"id": "0065", "nombre": "Aceitunas", "precio": 1200.00, "vencimiento": "2026-09-21"},
+    {"id": "0066", "nombre": "Pickles", "precio": 950.00, "vencimiento": "2026-09-26"},
+    {"id": "0067", "nombre": "Choclo", "precio": 700.00, "vencimiento": "2026-10-01"},
+    {"id": "0068", "nombre": "Arvejas", "precio": 650.00, "vencimiento": "2026-10-06"},
+    {"id": "0069", "nombre": "Porotos", "precio": 800.00, "vencimiento": "2026-10-11"},
+    {"id": "0070", "nombre": "Cerezas", "precio": 2500.00, "vencimiento": "2026-10-16"},
+    {"id": "0071", "nombre": "Ciruelas", "precio": 1800.00, "vencimiento": "2026-10-21"},
+    {"id": "0072", "nombre": "Duraznos", "precio": 2000.00, "vencimiento": "2026-10-26"},
+    {"id": "0073", "nombre": "Peras", "precio": 1500.00, "vencimiento": "2026-10-31"},
+    {"id": "0074", "nombre": "Uvas", "precio": 2200.00, "vencimiento": "2026-11-05"},
+    {"id": "0075", "nombre": "Kiwi", "precio": 1700.00, "vencimiento": "2026-11-10"},
+    {"id": "0076", "nombre": "Limon", "precio": 800.00, "vencimiento": "2026-11-15"},
+    {"id": "0077", "nombre": "Lima", "precio": 900.00, "vencimiento": "2026-11-20"},
+    {"id": "0078", "nombre": "Miel", "precio": 1600.00, "vencimiento": "2026-11-25"},
+    {"id": "0079", "nombre": "Sopa", "precio": 750.00, "vencimiento": "2026-11-30"},
+    {"id": "0080", "nombre": "Pure", "precio": 600.00, "vencimiento": "2026-12-05"},
+    {"id": "0081", "nombre": "Gelatina", "precio": 500.00, "vencimiento": "2026-12-10"},
+    {"id": "0082", "nombre": "Flan", "precio": 550.00, "vencimiento": "2026-12-15"},
+    {"id": "0083", "nombre": "Helado", "precio": 2000.00, "vencimiento": "2026-12-20"},
+    {"id": "0084", "nombre": "Alfajores", "precio": 1200.00, "vencimiento": "2026-12-25"},
+    {"id": "0085", "nombre": "Budin", "precio": 1300.00, "vencimiento": "2026-12-30"},
+    {"id": "0086", "nombre": "Magdalenas", "precio": 900.00, "vencimiento": "2027-01-04"},
+    {"id": "0087", "nombre": "Snacks", "precio": 800.00, "vencimiento": "2027-01-09"},
+    {"id": "0088", "nombre": "Papas fritas", "precio": 1100.00, "vencimiento": "2027-01-14"},
+    {"id": "0089", "nombre": "Mani", "precio": 700.00, "vencimiento": "2027-01-19"},
+    {"id": "0090", "nombre": "Pistachos", "precio": 2500.00, "vencimiento": "2027-01-24"},
+    {"id": "0091", "nombre": "Almendras", "precio": 2200.00, "vencimiento": "2027-01-29"},
+    {"id": "0092", "nombre": "Nueces", "precio": 2000.00, "vencimiento": "2027-02-03"},
+    {"id": "0093", "nombre": "Pasas", "precio": 1500.00, "vencimiento": "2027-02-08"},
+    {"id": "0094", "nombre": "Ciruelas pasas", "precio": 1400.00, "vencimiento": "2027-02-13"},
+    {"id": "0095", "nombre": "Frutas secas", "precio": 1900.00, "vencimiento": "2027-02-18"},
+    {"id": "0096", "nombre": "Semillas", "precio": 1000.00, "vencimiento": "2027-02-23"},
+    {"id": "0097", "nombre": "Pescados enlatados", "precio": 1300.00, "vencimiento": "2027-02-28"},
+    {"id": "0098", "nombre": "Vegetales congelados", "precio": 1500.00, "vencimiento": "2027-03-05"},
+    {"id": "0099", "nombre": "Hamburguesas", "precio": 2800.00, "vencimiento": "2027-03-10"},
+    {"id": "0100", "nombre": "Pizzas congeladas", "precio": 3000.00, "vencimiento": "2027-03-15"},
+    {"id": "0101", "nombre": "Croissant", "precio": 450.00, "vencimiento": "2027-03-20"},
+    {"id": "0102", "nombre": "Donas", "precio": 550.00, "vencimiento": "2027-03-25"},
+    {"id": "0103", "nombre": "Muffins", "precio": 600.00, "vencimiento": "2027-03-30"},
+    {"id": "0104", "nombre": "Pancakes", "precio": 700.00, "vencimiento": "2027-04-04"},
+    {"id": "0105", "nombre": "Sirope", "precio": 900.00, "vencimiento": "2027-04-09"},
+    {"id": "0106", "nombre": "Cacao en polvo", "precio": 1100.00, "vencimiento": "2027-04-14"},
+    {"id": "0107", "nombre": "Te", "precio": 800.00, "vencimiento": "2027-04-19"},
+    {"id": "0108", "nombre": "Infusiones", "precio": 850.00, "vencimiento": "2027-04-24"},
+    {"id": "0109", "nombre": "Menta", "precio": 300.00, "vencimiento": "2027-04-29"},
+    {"id": "0110", "nombre": "Boldo", "precio": 320.00, "vencimiento": "2027-05-04"},
+    {"id": "0111", "nombre": "Manzanilla", "precio": 350.00, "vencimiento": "2027-05-09"},
+    {"id": "0112", "nombre": "Limpieza liquida", "precio": 1000.00, "vencimiento": "2027-05-14"},
+    {"id": "0113", "nombre": "Limpiador de pisos", "precio": 900.00, "vencimiento": "2027-05-19"},
+    {"id": "0114", "nombre": "Lustramuebles", "precio": 700.00, "vencimiento": "2027-05-24"},
+    {"id": "0115", "nombre": "Bolsas de residuos", "precio": 400.00, "vencimiento": "2027-05-29"},
+    {"id": "0116", "nombre": "Fosforos", "precio": 150.00, "vencimiento": "2027-06-03"},
+    {"id": "0117", "nombre": "Velas", "precio": 300.00, "vencimiento": "2027-06-08"},
+    {"id": "0118", "nombre": "Pilas", "precio": 600.00, "vencimiento": "2027-06-13"},
+    {"id": "0119", "nombre": "Encendedor", "precio": 250.00, "vencimiento": "2027-06-18"},
+    {"id": "0120", "nombre": "Botella de agua", "precio": 500.00, "vencimiento": "2027-06-23"},
+    {"id": "0121", "nombre": "Jabon para ropa", "precio": 1500.00, "vencimiento": "2027-06-28"},
+    {"id": "0122", "nombre": "Suavizante", "precio": 1300.00, "vencimiento": "2027-07-03"},
+    {"id": "0123", "nombre": "Cloro", "precio": 700.00, "vencimiento": "2027-07-08"},
+    {"id": "0124", "nombre": "Insecticida", "precio": 1000.00, "vencimiento": "2027-07-13"},
+    {"id": "0125", "nombre": "Repelente", "precio": 900.00, "vencimiento": "2027-07-18"},
+    {"id": "0126", "nombre": "Protector solar", "precio": 2000.00, "vencimiento": "2027-07-23"},
+    {"id": "0127", "nombre": "After sun", "precio": 1500.00, "vencimiento": "2027-07-28"},
+    {"id": "0128", "nombre": "Sales de baño", "precio": 800.00, "vencimiento": "2027-08-02"},
+    {"id": "0129", "nombre": "Mascarilla facial", "precio": 1200.00, "vencimiento": "2027-08-07"},
+    {"id": "0130", "nombre": "Exfoliante", "precio": 1100.00, "vencimiento": "2027-08-12"},
+    {"id": "0131", "nombre": "Algodon", "precio": 300.00, "vencimiento": "2027-08-17"},
+    {"id": "0132", "nombre": "Alcohol", "precio": 500.00, "vencimiento": "2027-08-22"},
+    {"id": "0133", "nombre": "Agua oxigenada", "precio": 400.00, "vencimiento": "2027-08-27"},
+    {"id": "0134", "nombre": "Vendas", "precio": 200.00, "vencimiento": "2027-09-01"},
+    {"id": "0135", "nombre": "Curitas", "precio": 150.00, "vencimiento": "2027-09-06"},
+    {"id": "0136", "nombre": "Analgésico", "precio": 700.00, "vencimiento": "2027-09-11"},
+    {"id": "0137", "nombre": "Antiacido", "precio": 600.00, "vencimiento": "2027-09-16"},
+    {"id": "0138", "nombre": "Vitaminas", "precio": 1500.00, "vencimiento": "2027-09-21"},
+    {"id": "0139", "nombre": "Suplementos", "precio": 2000.00, "vencimiento": "2027-09-26"},
+    {"id": "0140", "nombre": "Termometro", "precio": 1200.00, "vencimiento": "2027-10-01"},
+    {"id": "0141", "nombre": "Pastillas para la tos", "precio": 500.00, "vencimiento": "2027-10-06"},
+    {"id": "0142", "nombre": "Jarabe para la tos", "precio": 900.00, "vencimiento": "2027-10-11"},
+    {"id": "0143", "nombre": "Gasa", "precio": 100.00, "vencimiento": "2027-10-16"},
+    {"id": "0144", "nombre": "Esparadrapo", "precio": 120.00, "vencimiento": "2027-10-21"},
+    {"id": "0145", "nombre": "Agujas", "precio": 80.00, "vencimiento": "2027-10-26"},
+    {"id": "0146", "nombre": "Tijeras", "precio": 400.00, "vencimiento": "2027-10-31"},
+    {"id": "0147", "nombre": "Pinzas", "precio": 350.00, "vencimiento": "2027-11-05"},
+    {"id": "0148", "nombre": "Lima de uñas", "precio": 150.00, "vencimiento": "2027-11-10"},
+    {"id": "0149", "nombre": "Cortaunas", "precio": 200.00, "vencimiento": "2027-11-15"},
+    {"id": "0150", "nombre": "Cepillo de dientes", "precio": 300.00, "vencimiento": "2027-11-20"},
+    {"id": "0151", "nombre": "Enjuague bucal", "precio": 700.00, "vencimiento": "2027-11-25"},
+    {"id": "0152", "nombre": "Hilo dental", "precio": 250.00, "vencimiento": "2027-11-30"},
+    {"id": "0153", "nombre": "Crema dental niños", "precio": 400.00, "vencimiento": "2027-12-05"},
+    {"id": "0154", "nombre": "Toallas femeninas", "precio": 600.00, "vencimiento": "2027-12-10"},
+    {"id": "0155", "nombre": "Protectores diarios", "precio": 500.00, "vencimiento": "2027-12-15"},
+    {"id": "0156", "nombre": "Tampones", "precio": 700.00, "vencimiento": "2027-12-20"},
+    {"id": "0157", "nombre": "Pañales", "precio": 2500.00, "vencimiento": "2027-12-25"},
+    {"id": "0158", "nombre": "Toallitas humedas", "precio": 800.00, "vencimiento": "2027-12-30"},
+    {"id": "0159", "nombre": "Crema para pañales", "precio": 900.00, "vencimiento": "2028-01-04"},
+    {"id": "0160", "nombre": "Mamaderas", "precio": 1500.00, "vencimiento": "2028-01-09"},
+    {"id": "0161", "nombre": "Chupetes", "precio": 400.00, "vencimiento": "2028-01-14"},
+    {"id": "0162", "nombre": "Biberones", "precio": 1300.00, "vencimiento": "2028-01-19"},
+    {"id": "0163", "nombre": "Leche en polvo", "precio": 3500.00, "vencimiento": "2028-01-24"},
+    {"id": "0164", "nombre": "Papillas", "precio": 1000.00, "vencimiento": "2028-01-29"},
+    {"id": "0165", "nombre": "Cereales para bebe", "precio": 1100.00, "vencimiento": "2028-02-03"},
+    {"id": "0166", "nombre": "Juguetes para bebe", "precio": 2000.00, "vencimiento": "2028-02-08"},
+    {"id": "0167", "nombre": "Ropa de bebe", "precio": 1800.00, "vencimiento": "2028-02-13"},
+    {"id": "0168", "nombre": "Shampoo de bebe", "precio": 600.00, "vencimiento": "2028-02-18"},
+    {"id": "0169", "nombre": "Jabon de bebe", "precio": 500.00, "vencimiento": "2028-02-23"},
+    {"id": "0170", "nombre": "Crema de bebe", "precio": 700.00, "vencimiento": "2028-02-28"},
+    {"id": "0171", "nombre": "Talco de bebe", "precio": 450.00, "vencimiento": "2028-03-05"},
+    {"id": "0172", "nombre": "Aceite de bebe", "precio": 800.00, "vencimiento": "2028-03-10"},
+    {"id": "0173", "nombre": "Hisopos de bebe", "precio": 200.00, "vencimiento": "2028-03-15"},
+    {"id": "0174", "nombre": "Corta uñas bebe", "precio": 300.00, "vencimiento": "2028-03-20"},
+    {"id": "0175", "nombre": "Cepillo de bebe", "precio": 250.00, "vencimiento": "2028-03-25"},
+    {"id": "0176", "nombre": "Peine de bebe", "precio": 220.00, "vencimiento": "2028-03-30"},
+    {"id": "0177", "nombre": "Termo", "precio": 1500.00, "vencimiento": "2028-04-04"},
+    {"id": "0178", "nombre": "Taza", "precio": 400.00, "vencimiento": "2028-04-09"},
+    {"id": "0179", "nombre": "Plato", "precio": 350.00, "vencimiento": "2028-04-14"},
+    {"id": "0180", "nombre": "Vaso", "precio": 300.00, "vencimiento": "2028-04-19"},
+    {"id": "0181", "nombre": "Cubiertos", "precio": 600.00, "vencimiento": "2028-04-24"},
+    {"id": "0182", "nombre": "Abrelatas", "precio": 500.00, "vencimiento": "2028-04-29"},
+    {"id": "0183", "nombre": "Sacacorchos", "precio": 450.00, "vencimiento": "2028-05-04"},
+    {"id": "0184", "nombre": "Pelapapas", "precio": 300.00, "vencimiento": "2028-05-09"},
+    {"id": "0185", "nombre": "Rallador", "precio": 550.00, "vencimiento": "2028-05-14"},
+    {"id": "0186", "nombre": "Colador", "precio": 400.00, "vencimiento": "2028-05-19"},
+    {"id": "0187", "nombre": "Tabla de cortar", "precio": 800.00, "vencimiento": "2028-05-24"},
+    {"id": "0188", "nombre": "Fuentes para horno", "precio": 1500.00, "vencimiento": "2028-05-29"},
+    {"id": "0189", "nombre": "Sarten", "precio": 2000.00, "vencimiento": "2028-06-03"},
+    {"id": "0190", "nombre": "Olla", "precio": 2500.00, "vencimiento": "2028-06-08"},
+    {"id": "0191", "nombre": "Cacerola", "precio": 2200.00, "vencimiento": "2028-06-13"},
+    {"id": "0192", "nombre": "Juego de cuchillos", "precio": 3000.00, "vencimiento": "2028-06-18"},
+    {"id": "0193", "nombre": "Bateria de cocina", "precio": 5000.00, "vencimiento": "2028-06-23"},
+    {"id": "0194", "nombre": "Tostadora", "precio": 2800.00, "vencimiento": "2028-06-28"},
+    {"id": "0195", "nombre": "Pava electrica", "precio": 2200.00, "vencimiento": "2028-07-03"},
+    {"id": "0196", "nombre": "Cafetera", "precio": 3500.00, "vencimiento": "2028-07-08"},
+    {"id": "0197", "nombre": "Licuadora", "precio": 4000.00, "vencimiento": "2028-07-13"},
+    {"id": "0198", "nombre": "Batidora", "precio": 3800.00, "vencimiento": "2028-07-18"},
+    {"id": "0199", "nombre": "Mixer", "precio": 2500.00, "vencimiento": "2028-07-23"},
+    {"id": "0200", "nombre": "Procesadora", "precio": 4500.00, "vencimiento": "2028-07-28"},
+    {"id": "0201", "nombre": "Exprimidores", "precio": 1200.00, "vencimiento": "2028-08-02"},
+    {"id": "0202", "nombre": "Picadora", "precio": 1800.00, "vencimiento": "2028-08-07"},
+    {"id": "0203", "nombre": "Balanzas de cocina", "precio": 1000.00, "vencimiento": "2028-08-12"},
+    {"id": "0204", "nombre": "Temporizador", "precio": 300.00, "vencimiento": "2028-08-17"},
+    {"id": "0205", "nombre": "Medidores", "precio": 250.00, "vencimiento": "2028-08-22"},
+    {"id": "0206", "nombre": "Guantes de cocina", "precio": 400.00, "vencimiento": "2028-08-27"},
+    {"id": "0207", "nombre": "Reposafuentes", "precio": 200.00, "vencimiento": "2028-09-01"},
+    {"id": "0208", "nombre": "Escurridor de platos", "precio": 700.00, "vencimiento": "2028-09-06"},
+    {"id": "0209", "nombre": "Jabonera", "precio": 150.00, "vencimiento": "2028-09-11"},
+    {"id": "0210", "nombre": "Dispensador de jabon", "precio": 300.00, "vencimiento": "2028-09-16"},
+    {"id": "0211", "nombre": "Cortinas de baño", "precio": 800.00, "vencimiento": "2028-09-21"},
+    {"id": "0212", "nombre": "Alfombra de baño", "precio": 500.00, "vencimiento": "2028-09-26"},
+    {"id": "0213", "nombre": "Toallas de mano", "precio": 400.00, "vencimiento": "2028-10-01"},
+    {"id": "0214", "nombre": "Toallones", "precio": 900.00, "vencimiento": "2028-10-06"},
+    {"id": "0215", "nombre": "Espejo de baño", "precio": 1200.00, "vencimiento": "2028-10-11"},
+    {"id": "0216", "nombre": "Cesto de basura", "precio": 600.00, "vencimiento": "2028-10-16"},
+    {"id": "0217", "nombre": "Escobilla de baño", "precio": 300.00, "vencimiento": "2028-10-21"},
+    {"id": "0218", "nombre": "Perchero", "precio": 500.00, "vencimiento": "2028-10-26"},
+    {"id": "0219", "nombre": "Botiquin", "precio": 1000.00, "vencimiento": "2028-10-31"},
+    {"id": "0220", "nombre": "Cotonetes", "precio": 200.00, "vencimiento": "2028-11-05"},
+    {"id": "0221", "nombre": "Agua micelar", "precio": 1500.00, "vencimiento": "2028-11-10"},
+    {"id": "0222", "nombre": "Tonico facial", "precio": 1300.00, "vencimiento": "2028-11-15"},
+    {"id": "0223", "nombre": "Serum facial", "precio": 2000.00, "vencimiento": "2028-11-20"},
+    {"id": "0224", "nombre": "Contorno de ojos", "precio": 1800.00, "vencimiento": "2028-11-25"},
+    {"id": "0225", "nombre": "Crema de noche", "precio": 1700.00, "vencimiento": "2028-11-30"},
+    {"id": "0226", "nombre": "Protector labial", "precio": 400.00, "vencimiento": "2028-12-05"},
+    {"id": "0227", "nombre": "Maquillaje", "precio": 2500.00, "vencimiento": "2028-12-10"},
+    {"id": "0228", "nombre": "Base de maquillaje", "precio": 1800.00, "vencimiento": "2028-12-15"},
+    {"id": "0229", "nombre": "Corrector", "precio": 1200.00, "vencimiento": "2028-12-20"},
+    {"id": "0230", "nombre": "Polvo compacto", "precio": 1000.00, "vencimiento": "2028-12-25"},
+    {"id": "0231", "nombre": "Rubor", "precio": 900.00, "vencimiento": "2028-12-30"},
+    {"id": "0232", "nombre": "Sombra de ojos", "precio": 800.00, "vencimiento": "2029-01-04"},
+    {"id": "0233", "nombre": "Delineador", "precio": 700.00, "vencimiento": "2029-01-09"},
+    {"id": "0234", "nombre": "Mascara de pestañas", "precio": 1000.00, "vencimiento": "2029-01-14"},
+    {"id": "0235", "nombre": "Labial", "precio": 950.00, "vencimiento": "2029-01-19"},
+    {"id": "0236", "nombre": "Brillo labial", "precio": 600.00, "vencimiento": "2029-01-24"},
+    {"id": "0237", "nombre": "Esmalte de uñas", "precio": 400.00, "vencimiento": "2029-01-29"},
+    {"id": "0238", "nombre": "Quita esmalte", "precio": 300.00, "vencimiento": "2029-02-03"},
+    {"id": "0239", "nombre": "Lima de uñas metalica", "precio": 250.00, "vencimiento": "2029-02-08"},
+    {"id": "0240", "nombre": "Pinceles de maquillaje", "precio": 1500.00, "vencimiento": "2029-02-13"},
+    {"id": "0241", "nombre": "Esponjas de maquillaje", "precio": 500.00, "vencimiento": "2029-02-18"},
+    {"id": "0242", "nombre": "Rizador de pestañas", "precio": 700.00, "vencimiento": "2029-02-23"},
+    {"id": "0243", "nombre": "Depiladora", "precio": 3000.00, "vencimiento": "2029-02-28"},
+    {"id": "0244", "nombre": "Cera depilatoria", "precio": 900.00, "vencimiento": "2029-03-05"},
+    {"id": "0245", "nombre": "Bandas depilatorias", "precio": 600.00, "vencimiento": "2029-03-10"},
+    {"id": "0246", "nombre": "Crema depilatoria", "precio": 800.00, "vencimiento": "2029-03-15"},
+    {"id": "0247", "nombre": "Afeitadora", "precio": 1500.00, "vencimiento": "2029-03-20"},
+    {"id": "0248", "nombre": "Espuma de afeitar", "precio": 700.00, "vencimiento": "2029-03-25"},
+    {"id": "0249", "nombre": "After shave", "precio": 850.00, "vencimiento": "2029-03-30"},
+    {"id": "0250", "nombre": "Cuchillas de afeitar", "precio": 500.00, "vencimiento": "2029-04-04"},
+    {"id": "0251", "nombre": "Perfume", "precio": 4000.00, "vencimiento": "2029-04-09"},
+    {"id": "0252", "nombre": "Colonia", "precio": 2500.00, "vencimiento": "2029-04-14"},
+    {"id": "0253", "nombre": "Body splash", "precio": 1200.00, "vencimiento": "2029-04-19"},
+    {"id": "0254", "nombre": "Talco corporal", "precio": 600.00, "vencimiento": "2029-04-24"},
+    {"id": "0255", "nombre": "Crema corporal", "precio": 1400.00, "vencimiento": "2029-04-29"},
+    {"id": "0256", "nombre": "Locion corporal", "precio": 1300.00, "vencimiento": "2029-05-04"},
+    {"id": "0257", "nombre": "Exfoliante corporal", "precio": 1000.00, "vencimiento": "2029-05-09"},
+    {"id": "0258", "nombre": "Jabon liquido corporal", "precio": 900.00, "vencimiento": "2029-05-14"},
+    {"id": "0259", "nombre": "Esponja de baño corporal", "precio": 400.00, "vencimiento": "2029-05-19"},
+    {"id": "0260", "nombre": "Cepillo corporal", "precio": 600.00, "vencimiento": "2029-05-24"},
+    {"id": "0261", "nombre": "Piedra pomex", "precio": 250.00, "vencimiento": "2029-05-29"},
+    {"id": "0262", "nombre": "Cremas para pies", "precio": 800.00, "vencimiento": "2029-06-03"},
+    {"id": "0263", "nombre": "Desodorante de pies", "precio": 700.00, "vencimiento": "2029-06-08"},
+    {"id": "0264", "nombre": "Plantillas", "precio": 500.00, "vencimiento": "2029-06-13"},
+    {"id": "0265", "nombre": "Talco para pies", "precio": 450.00, "vencimiento": "2029-06-18"},
+    {"id": "0266", "nombre": "Spray capilar", "precio": 900.00, "vencimiento": "2029-06-23"},
+    {"id": "0267", "nombre": "Gel para el cabello", "precio": 700.00, "vencimiento": "2029-06-28"},
+    {"id": "0268", "nombre": "Laca para el cabello", "precio": 800.00, "vencimiento": "2029-07-03"},
+    {"id": "0269", "nombre": "Espuma para el cabello", "precio": 750.00, "vencimiento": "2029-07-08"},
+    {"id": "0270", "nombre": "Cera para el cabello", "precio": 650.00, "vencimiento": "2029-07-13"},
+    {"id": "0271", "nombre": "Tintura para el cabello", "precio": 1500.00, "vencimiento": "2029-07-18"},
+    {"id": "0272", "nombre": "Decolorante", "precio": 1200.00, "vencimiento": "2029-07-23"},
+    {"id": "0273", "nombre": "Oxidante", "precio": 300.00, "vencimiento": "2029-07-28"},
+    {"id": "0274", "nombre": "Guantes de latex", "precio": 200.00, "vencimiento": "2029-08-02"},
+    {"id": "0275", "nombre": "Pincel para tintura", "precio": 150.00, "vencimiento": "2029-08-07"},
+    {"id": "0276", "nombre": "Bol para tintura", "precio": 180.00, "vencimiento": "2029-08-12"},
+    {"id": "0277", "nombre": "Secador de pelo", "precio": 3000.00, "vencimiento": "2029-08-17"},
+    {"id": "0278", "nombre": "Planchita de pelo", "precio": 3500.00, "vencimiento": "2029-08-22"},
+    {"id": "0279", "nombre": "Rizador de pelo", "precio": 2800.00, "vencimiento": "2029-08-27"},
+    {"id": "0280", "nombre": "Cepillo para pelo", "precio": 600.00, "vencimiento": "2029-09-01"},
+    {"id": "0281", "nombre": "Peine", "precio": 300.00, "vencimiento": "2029-09-06"},
+    {"id": "0282", "nombre": "Bandas elasticas", "precio": 100.00, "vencimiento": "2029-09-11"},
+    {"id": "0283", "nombre": "Hebillas", "precio": 80.00, "vencimiento": "2029-09-16"},
+    {"id": "0284", "nombre": "Vincha", "precio": 200.00, "vencimiento": "2029-09-21"},
+    {"id": "0285", "nombre": "Gorros de baño", "precio": 150.00, "vencimiento": "2029-09-26"},
+    {"id": "0286", "nombre": "Espejos de mano", "precio": 400.00, "vencimiento": "2029-10-01"},
+    {"id": "0287", "nombre": "Almohada", "precio": 1800.00, "vencimiento": "2029-10-06"},
+    {"id": "0288", "nombre": "Sabanas", "precio": 3000.00, "vencimiento": "2029-10-11"},
+    {"id": "0289", "nombre": "Frazada", "precio": 2500.00, "vencimiento": "2029-10-16"},
+    {"id": "0290", "nombre": "Acolchado", "precio": 4000.00, "vencimiento": "2029-10-21"},
+    {"id": "0291", "nombre": "Manta", "precio": 1500.00, "vencimiento": "2029-10-26"},
+    {"id": "0292", "nombre": "Cubre cama", "precio": 2800.00, "vencimiento": "2029-10-31"},
+    {"id": "0293", "nombre": "Almohadones", "precio": 900.00, "vencimiento": "2029-11-05"},
+    {"id": "0294", "nombre": "Fundas de almohada", "precio": 400.00, "vencimiento": "2029-11-10"},
+    {"id": "0295", "nombre": "Cortinas", "precio": 1200.00, "vencimiento": "2029-11-15"},
+    {"id": "0296", "nombre": "Barral de cortina", "precio": 800.00, "vencimiento": "2029-11-20"},
+    {"id": "0297", "nombre": "Alfombras", "precio": 1800.00, "vencimiento": "2029-11-25"},
+    {"id": "0298", "nombre": "Lampara", "precio": 2000.00, "vencimiento": "2029-11-30"},
+    {"id": "0299", "nombre": "Foco", "precio": 300.00, "vencimiento": "2029-12-05"},
+    {"id": "0300", "nombre": "Zapatillas", "precio": 5000.00, "vencimiento": "2029-12-10"},
+    {"id": "0301", "nombre": "Ojotas", "precio": 1200.00, "vencimiento": "2029-12-15"},
+    {"id": "0302", "nombre": "Sandalias", "precio": 1800.00, "vencimiento": "2029-12-20"},
+    {"id": "0303", "nombre": "Botas", "precio": 7000.00, "vencimiento": "2029-12-25"},
+    {"id": "0304", "nombre": "Zapatos", "precio": 6000.00, "vencimiento": "2029-12-30"},
+    {"id": "0305", "nombre": "Medias", "precio": 400.00, "vencimiento": "2030-01-04"},
+    {"id": "0306", "nombre": "Ropa interior", "precio": 800.00, "vencimiento": "2030-01-09"},
+    {"id": "0307", "nombre": "Remera", "precio": 1500.00, "vencimiento": "2030-01-14"},
+    {"id": "0308", "nombre": "Camisa", "precio": 2000.00, "vencimiento": "2030-01-19"},
+    {"id": "0309", "nombre": "Pantalon", "precio": 2500.00, "vencimiento": "2030-01-24"},
+    {"id": "0310", "nombre": "Jean", "precio": 3000.00, "vencimiento": "2030-01-29"},
+    {"id": "0311", "nombre": "Short", "precio": 1300.00, "vencimiento": "2030-02-03"},
+    {"id": "0312", "nombre": "Pollera", "precio": 1800.00, "vencimiento": "2030-02-08"},
+    {"id": "0313", "nombre": "Vestido", "precio": 2800.00, "vencimiento": "2030-02-13"},
+    {"id": "0314", "nombre": "Campera", "precio": 4500.00, "vencimiento": "2030-02-18"},
+    {"id": "0315", "nombre": "Buzo", "precio": 2200.00, "vencimiento": "2030-02-23"},
+    {"id": "0316", "nombre": "Sweater", "precio": 2000.00, "vencimiento": "2030-02-28"},
+    {"id": "0317", "nombre": "Bufanda", "precio": 800.00, "vencimiento": "2030-03-05"},
+    {"id": "0318", "nombre": "Guantes", "precio": 700.00, "vencimiento": "2030-03-10"},
+    {"id": "0319", "nombre": "Gorro", "precio": 600.00, "vencimiento": "2030-03-15"},
+    {"id": "0320", "nombre": "Paraguas", "precio": 1000.00, "vencimiento": "2030-03-20"},
+    {"id": "0321", "nombre": "Anteojos de sol", "precio": 1500.00, "vencimiento": "2030-03-25"},
+    {"id": "0322", "nombre": "Billetera", "precio": 1200.00, "vencimiento": "2030-03-30"},
+    {"id": "0323", "nombre": "Mochila", "precio": 2500.00, "vencimiento": "2030-04-04"},
+    {"id": "0324", "nombre": "Cartera", "precio": 3000.00, "vencimiento": "2030-04-09"},
+    {"id": "0325", "nombre": "Valija", "precio": 5000.00, "vencimiento": "2030-04-14"},
+    {"id": "0326", "nombre": "Agenda", "precio": 800.00, "vencimiento": "2030-04-19"},
+    {"id": "0327", "nombre": "Lapicera", "precio": 150.00, "vencimiento": "2030-04-24"},
+    {"id": "0328", "nombre": "Lapiz", "precio": 100.00, "vencimiento": "2030-04-29"},
+    {"id": "0329", "nombre": "Goma de borrar", "precio": 80.00, "vencimiento": "2030-05-04"},
+    {"id": "0330", "nombre": "Sacapuntas", "precio": 70.00, "vencimiento": "2030-05-09"},
+    {"id": "0331", "nombre": "Cuaderno", "precio": 300.00, "vencimiento": "2030-05-14"},
+    {"id": "0332", "nombre": "Block de notas", "precio": 200.00, "vencimiento": "2030-05-19"},
+    {"id": "0333", "nombre": "Carpetas", "precio": 400.00, "vencimiento": "2030-05-24"},
+    {"id": "0334", "nombre": "Folios", "precio": 120.00, "vencimiento": "2030-05-29"},
+    {"id": "0335", "nombre": "Perforadora", "precio": 500.00, "vencimiento": "2030-06-03"},
+    {"id": "0336", "nombre": "Engrapadora", "precio": 450.00, "vencimiento": "2030-06-08"},
+    {"id": "0337", "nombre": "Grapas", "precio": 50.00, "vencimiento": "2030-06-13"},
+    {"id": "0338", "nombre": "Cinta adhesiva", "precio": 180.00, "vencimiento": "2030-06-18"},
+    {"id": "0339", "nombre": "Tijera de papeleria", "precio": 250.00, "vencimiento": "2030-06-23"},
+    {"id": "0340", "nombre": "Pegamento", "precio": 200.00, "vencimiento": "2030-06-28"},
+    {"id": "0341", "nombre": "Marcadores", "precio": 350.00, "vencimiento": "2030-07-03"},
+    {"id": "0342", "nombre": "Resaltadores", "precio": 280.00, "vencimiento": "2030-07-08"},
+    {"id": "0343", "nombre": "Pinturas", "precio": 800.00, "vencimiento": "2030-07-13"},
+    {"id": "0344", "nombre": "Pinceles para pintar", "precio": 500.00, "vencimiento": "2030-07-18"},
+    {"id": "0345", "nombre": "Lapices de colores", "precio": 400.00, "vencimiento": "2030-07-23"},
+    {"id": "0346", "nombre": "Plastilina", "precio": 300.00, "vencimiento": "2030-07-28"},
+    {"id": "0347", "nombre": "Temperas", "precio": 600.00, "vencimiento": "2030-08-02"},
+    {"id": "0348", "nombre": "Acuarelas", "precio": 700.00, "vencimiento": "2030-08-07"},
+    {"id": "0349", "nombre": "Libros para colorear", "precio": 500.00, "vencimiento": "2030-08-12"},
+    {"id": "0350", "nombre": "Rompecabezas", "precio": 1200.00, "vencimiento": "2030-08-17"},
+    {"id": "0351", "nombre": "Juegos de mesa", "precio": 1800.00, "vencimiento": "2030-08-22"},
+    {"id": "0352", "nombre": "Naipes", "precio": 300.00, "vencimiento": "2030-08-27"},
+    {"id": "0353", "nombre": "Pelota", "precio": 900.00, "vencimiento": "2030-09-01"},
+    {"id": "0354", "nombre": "Muñecas", "precio": 1500.00, "vencimiento": "2030-09-06"},
+    {"id": "0355", "nombre": "Autos de juguete", "precio": 800.00, "vencimiento": "2030-09-11"},
+    {"id": "0356", "nombre": "Bloques de construccion", "precio": 1000.00, "vencimiento": "2030-09-16"},
+    {"id": "0357", "nombre": "Disfraces", "precio": 2000.00, "vencimiento": "2030-09-21"},
+    {"id": "0358", "nombre": "Instrumentos musicales juguete", "precio": 1500.00, "vencimiento": "2030-09-26"},
+    {"id": "0359", "nombre": "Peluches", "precio": 700.00, "vencimiento": "2030-10-01"},
+    {"id": "0360", "nombre": "Set de te", "precio": 900.00, "vencimiento": "2030-10-06"},
+    {"id": "0361", "nombre": "Cocina de juguete", "precio": 2500.00, "vencimiento": "2030-10-11"},
+    {"id": "0362", "nombre": "Herramientas de juguete", "precio": 1200.00, "vencimiento": "2030-10-16"},
+    {"id": "0363", "nombre": "Doctor de juguete", "precio": 1000.00, "vencimiento": "2030-10-21"},
+    {"id": "0364", "nombre": "Pizarra", "precio": 1500.00, "vencimiento": "2030-10-26"},
+    {"id": "0365", "nombre": "Tizas", "precio": 100.00, "vencimiento": "2030-10-31"},
+    {"id": "0366", "nombre": "Marcadores para pizarra", "precio": 200.00, "vencimiento": "2030-11-05"},
+    {"id": "0367", "nombre": "Libros de cuentos", "precio": 800.00, "vencimiento": "2030-11-10"},
+    {"id": "0368", "nombre": "Cuentos infantiles", "precio": 700.00, "vencimiento": "2030-11-15"},
+    {"id": "0369", "nombre": "Enciclopedias", "precio": 3000.00, "vencimiento": "2030-11-20"},
+    {"id": "0370", "nombre": "Diccionarios", "precio": 1500.00, "vencimiento": "2030-11-25"},
+    {"id": "0371", "nombre": "Atlas", "precio": 1800.00, "vencimiento": "2030-11-30"},
+    {"id": "0372", "nombre": "Mapas", "precio": 500.00, "vencimiento": "2030-12-05"},
+    {"id": "0373", "nombre": "Globos terraqueos", "precio": 2500.00, "vencimiento": "2030-12-10"},
+    {"id": "0374", "nombre": "Calculadoras", "precio": 1000.00, "vencimiento": "2030-12-15"},
+    {"id": "0375", "nombre": "Reglas", "precio": 100.00, "vencimiento": "2030-12-20"},
+    {"id": "0376", "nombre": "Compases", "precio": 200.00, "vencimiento": "2030-12-25"},
+    {"id": "0377", "nombre": "Transportador", "precio": 150.00, "vencimiento": "2030-12-30"},
+    {"id": "0378", "nombre": "Escuadras", "precio": 180.00, "vencimiento": "2031-01-04"},
+    {"id": "0379", "nombre": "Set de geometria", "precio": 500.00, "vencimiento": "2031-01-09"},
+    {"id": "0380", "nombre": "Mochila escolar", "precio": 2000.00, "vencimiento": "2031-01-14"},
+    {"id": "0381", "nombre": "Cartuchera", "precio": 700.00, "vencimiento": "2031-01-19"},
+    {"id": "0382", "nombre": "Lonchera", "precio": 900.00, "vencimiento": "2031-01-24"},
+    {"id": "0383", "nombre": "Botella de agua para escuela", "precio": 600.00, "vencimiento": "2031-01-29"},
+    {"id": "0384", "nombre": "Kit de arte", "precio": 1500.00, "vencimiento": "2031-02-03"},
+    {"id": "0385", "nombre": "Pincel de arte", "precio": 250.00, "vencimiento": "2031-02-08"},
+    {"id": "0386", "nombre": "Atril", "precio": 2000.00, "vencimiento": "2031-02-13"},
+    {"id": "0387", "nombre": "Bastidor", "precio": 1000.00, "vencimiento": "2031-02-18"},
+    {"id": "0388", "nombre": "Oleos", "precio": 1800.00, "vencimiento": "2031-02-23"},
+    {"id": "0389", "nombre": "Acrilicos", "precio": 1500.00, "vencimiento": "2031-02-28"},
+    {"id": "0390", "nombre": "Carboncillos", "precio": 300.00, "vencimiento": "2031-03-05"},
+    {"id": "0391", "nombre": "Pasteles", "precio": 700.00, "vencimiento": "2031-03-10"},
+    {"id": "0392", "nombre": "Tinta china", "precio": 400.00, "vencimiento": "2031-03-15"},
+    {"id": "0393", "nombre": "Plumas para dibujo", "precio": 500.00, "vencimiento": "2031-03-20"},
+    {"id": "0394", "nombre": "Gomas de moldear", "precio": 150.00, "vencimiento": "2031-03-25"},
+    {"id": "0395", "nombre": "Arcilla", "precio": 600.00, "vencimiento": "2031-03-30"},
+    {"id": "0396", "nombre": "Piedra de afilar", "precio": 250.00, "vencimiento": "2031-04-04"},
+    {"id": "0397", "nombre": "Destornillador", "precio": 400.00, "vencimiento": "2031-04-09"},
+    {"id": "0398", "nombre": "Martillo", "precio": 500.00, "vencimiento": "2031-04-14"},
+    {"id": "0399", "nombre": "Llave inglesa", "precio": 700.00, "vencimiento": "2031-04-19"},
+    {"id": "0400", "nombre": "Pinza", "precio": 350.00, "vencimiento": "2031-04-24"},
+    {"id": "0401", "nombre": "Cinta metrica", "precio": 200.00, "vencimiento": "2031-04-29"},
+    {"id": "0402", "nombre": "Nivel", "precio": 800.00, "vencimiento": "2031-05-04"},
+    {"id": "0403", "nombre": "Taladro", "precio": 3000.00, "vencimiento": "2031-05-09"},
+    {"id": "0404", "nombre": "Mechas", "precio": 500.00, "vencimiento": "2031-05-14"},
+    {"id": "0405", "nombre": "Serrucho", "precio": 900.00, "vencimiento": "2031-05-19"},
+    {"id": "0406", "nombre": "Sierra", "precio": 1200.00, "vencimiento": "2031-05-24"},
+    {"id": "0407", "nombre": "Tornillos", "precio": 100.00, "vencimiento": "2031-05-29"},
+    {"id": "0408", "nombre": "Clavos", "precio": 80.00, "vencimiento": "2031-06-03"},
+    {"id": "0409", "nombre": "Tarugos", "precio": 70.00, "vencimiento": "2031-06-08"},
+    {"id": "0410", "nombre": "Bisagras", "precio": 200.00, "vencimiento": "2031-06-13"},
+    {"id": "0411", "nombre": "Candado", "precio": 600.00, "vencimiento": "2031-06-18"},
+    {"id": "0412", "nombre": "Cadenas", "precio": 400.00, "vencimiento": "2031-06-23"},
+    {"id": "0413", "nombre": "Pintura para pared", "precio": 2500.00, "vencimiento": "2031-06-28"},
+    {"id": "0414", "nombre": "Rodillo", "precio": 700.00, "vencimiento": "2031-07-03"},
+    {"id": "0415", "nombre": "Brocha", "precio": 300.00, "vencimiento": "2031-07-08"},
+    {"id": "0416", "nombre": "Cinta de pintor", "precio": 150.00, "vencimiento": "2031-07-13"},
+    {"id": "0417", "nombre": "Lija", "precio": 80.00, "vencimiento": "2031-07-18"},
+    {"id": "0418", "nombre": "Enduido", "precio": 900.00, "vencimiento": "2031-07-23"},
+    {"id": "0419", "nombre": "Espatula", "precio": 200.00, "vencimiento": "2031-07-28"},
+    {"id": "0420", "nombre": "Masilla", "precio": 300.00, "vencimiento": "2031-08-02"},
+    {"id": "0421", "nombre": "Sellador", "precio": 600.00, "vencimiento": "2031-08-07"},
+    {"id": "0422", "nombre": "Silicona", "precio": 500.00, "vencimiento": "2031-08-12"},
+    {"id": "0423", "nombre": "Adhesivo", "precio": 450.00, "vencimiento": "2031-08-17"},
+    {"id": "0424", "nombre": "Cinta aisladora", "precio": 100.00, "vencimiento": "2031-08-22"},
+    {"id": "0425", "nombre": "Terminales electricos", "precio": 120.00, "vencimiento": "2031-08-27"},
+    {"id": "0426", "nombre": "Cables", "precio": 800.00, "vencimiento": "2031-09-01"},
+    {"id": "0427", "nombre": "Enchufe", "precio": 200.00, "vencimiento": "2031-09-06"},
+    {"id": "0428", "nombre": "Toma corriente", "precio": 250.00, "vencimiento": "2031-09-11"},
+    {"id": "0429", "nombre": "Extension electrica", "precio": 1000.00, "vencimiento": "2031-09-16"},
+    {"id": "0430", "nombre": "Adaptador", "precio": 300.00, "vencimiento": "2031-09-21"},
+    {"id": "0431", "nombre": "Multimetro", "precio": 1500.00, "vencimiento": "2031-09-26"},
+    {"id": "0432", "nombre": "Alicate", "precio": 400.00, "vencimiento": "2031-10-01"},
+    {"id": "0433", "nombre": "Pinza de punta", "precio": 380.00, "vencimiento": "2031-10-06"},
+    {"id": "0434", "nombre": "Cortacables", "precio": 320.00, "vencimiento": "2031-10-11"},
+    {"id": "0435", "nombre": "Sopladora", "precio": 2500.00, "vencimiento": "2031-10-16"},
+    {"id": "0436", "nombre": "Aspiradora", "precio": 4000.00, "vencimiento": "2031-10-21"},
+    {"id": "0437", "nombre": "Lava tapizados", "precio": 3000.00, "vencimiento": "2031-10-26"},
+    {"id": "0438", "nombre": "Hidrolavadora", "precio": 5000.00, "vencimiento": "2031-10-31"},
+    {"id": "0439", "nombre": "Compresor", "precio": 6000.00, "vencimiento": "2031-11-05"},
+    {"id": "0440", "nombre": "Inflador", "precio": 800.00, "vencimiento": "2031-11-10"},
+    {"id": "0441", "nombre": "Kit de reparacion de neumaticos", "precio": 1200.00, "vencimiento": "2031-11-15"},
+    {"id": "0442", "nombre": "Aceite de motor", "precio": 1800.00, "vencimiento": "2031-11-20"},
+    {"id": "0443", "nombre": "Liquido de frenos", "precio": 900.00, "vencimiento": "2031-11-25"},
+    {"id": "0444", "nombre": "Anticongelante", "precio": 1000.00, "vencimiento": "2031-11-30"},
+    {"id": "0445", "nombre": "Liquido limpiaparabrisas", "precio": 500.00, "vencimiento": "2031-12-05"},
+    {"id": "0446", "nombre": "Shampoo para auto", "precio": 700.00, "vencimiento": "2031-12-10"},
+    {"id": "0447", "nombre": "Cera para auto", "precio": 800.00, "vencimiento": "2031-12-15"},
+    {"id": "0448", "nombre": "Esponja para auto", "precio": 200.00, "vencimiento": "2031-12-20"},
+    {"id": "0449", "nombre": "Paño de microfibra", "precio": 300.00, "vencimiento": "2031-12-25"},
+    {"id": "0450", "nombre": "Aromatizante para auto", "precio": 400.00, "vencimiento": "2031-12-30"},
+    {"id": "0451", "nombre": "Gato hidraulico", "precio": 3000.00, "vencimiento": "2032-01-04"},
+    {"id": "0452", "nombre": "Llave cruz", "precio": 700.00, "vencimiento": "2032-01-09"},
+    {"id": "0453", "nombre": "Cables de bateria", "precio": 1500.00, "vencimiento": "2032-01-14"},
+    {"id": "0454", "nombre": "Chaleco reflectante", "precio": 500.00, "vencimiento": "2032-01-19"},
+    {"id": "0455", "nombre": "Balizas", "precio": 800.00, "vencimiento": "2032-01-24"},
+    {"id": "0456", "nombre": "Caja de herramientas", "precio": 2000.00, "vencimiento": "2032-01-29"},
+    {"id": "0457", "nombre": "Destornillador electrico", "precio": 1500.00, "vencimiento": "2032-02-03"},
+    {"id": "0458", "nombre": "Set de llaves", "precio": 1800.00, "vencimiento": "2032-02-08"},
+    {"id": "0459", "nombre": "Remachadora", "precio": 900.00, "vencimiento": "2032-02-13"},
+    {"id": "0460", "nombre": "Remaches", "precio": 100.00, "vencimiento": "2032-02-18"},
+    {"id": "0461", "nombre": "Fresadora", "precio": 5000.00, "vencimiento": "2032-02-23"},
+    {"id": "0462", "nombre": "Amoladora", "precio": 3500.00, "vencimiento": "2032-02-28"},
+    {"id": "0463", "nombre": "Discos de corte", "precio": 300.00, "vencimiento": "2032-03-05"},
+    {"id": "0464", "nombre": "Sierra circular", "precio": 4000.00, "vencimiento": "2032-03-10"},
+    {"id": "0465", "nombre": "Sierra caladora", "precio": 2500.00, "vencimiento": "2032-03-15"},
+    {"id": "0466", "nombre": "Hoja de sierra", "precio": 200.00, "vencimiento": "2032-03-20"},
+    {"id": "0467", "nombre": "Sopletes", "precio": 1200.00, "vencimiento": "2032-03-25"},
+    {"id": "0468", "nombre": "Soldadora", "precio": 7000.00, "vencimiento": "2032-03-30"},
+    {"id": "0469", "nombre": "Electrodos", "precio": 500.00, "vencimiento": "2032-04-04"},
+    {"id": "0470", "nombre": "Mascara de soldar", "precio": 1000.00, "vencimiento": "2032-04-09"},
+    {"id": "0471", "nombre": "Guantes de soldar", "precio": 400.00, "vencimiento": "2032-04-14"},
+    {"id": "0472", "nombre": "Taladro de banco", "precio": 8000.00, "vencimiento": "2032-04-19"},
+    {"id": "0473", "nombre": "Fresas", "precio": 600.00, "vencimiento": "2032-04-24"},
+    {"id": "0474", "nombre": "Torno", "precio": 15000.00, "vencimiento": "2032-04-29"},
+    {"id": "0475", "nombre": "Herramientas de torno", "precio": 2000.00, "vencimiento": "2032-05-04"},
+    {"id": "0476", "nombre": "Llave dinamometrica", "precio": 1800.00, "vencimiento": "2032-05-09"},
+    {"id": "0477", "nombre": "Extractor de tornillos", "precio": 700.00, "vencimiento": "2032-05-14"},
+    {"id": "0478", "nombre": "Juego de tubos", "precio": 1500.00, "vencimiento": "2032-05-19"},
+    {"id": "0479", "nombre": "Criquet", "precio": 2000.00, "vencimiento": "2032-05-24"},
+    {"id": "0480", "nombre": "Caballetes", "precio": 1000.00, "vencimiento": "2032-05-29"},
+    {"id": "0481", "nombre": "Escalera", "precio": 2500.00, "vencimiento": "2032-06-03"},
+    {"id": "0482", "nombre": "Andamio", "precio": 5000.00, "vencimiento": "2032-06-08"},
+    {"id": "0483", "nombre": "Carretilla", "precio": 1800.00, "vencimiento": "2032-06-13"},
+    {"id": "0484", "nombre": "Pala", "precio": 700.00, "vencimiento": "2032-06-18"},
+    {"id": "0485", "nombre": "Pico", "precio": 800.00, "vencimiento": "2032-06-23"},
+    {"id": "0486", "nombre": "Rastrillo", "precio": 600.00, "vencimiento": "2032-06-28"},
+    {"id": "0487", "nombre": "Manguera", "precio": 900.00, "vencimiento": "2032-07-03"},
+    {"id": "0488", "nombre": "Aspersor", "precio": 400.00, "vencimiento": "2032-07-08"},
+    {"id": "0489", "nombre": "Tijera de podar", "precio": 500.00, "vencimiento": "2032-07-13"},
+    {"id": "0490", "nombre": "Guantes de jardin", "precio": 300.00, "vencimiento": "2032-07-18"},
+    {"id": "0491", "nombre": "Semillas de cesped", "precio": 1000.00, "vencimiento": "2032-07-23"},
+    {"id": "0492", "nombre": "Fertilizante", "precio": 1200.00, "vencimiento": "2032-07-28"},
+    {"id": "0493", "nombre": "Macetas", "precio": 200.00, "vencimiento": "2032-08-02"},
+    {"id": "0494", "nombre": "Tierra para macetas", "precio": 300.00, "vencimiento": "2032-08-07"},
+    {"id": "0495", "nombre": "Plantas", "precio": 800.00, "vencimiento": "2032-08-12"},
+    {"id": "0496", "nombre": "Flores", "precio": 700.00, "vencimiento": "2032-08-17"},
+    {"id": "0497", "nombre": "Herbicida", "precio": 900.00, "vencimiento": "2032-08-22"},
+    {"id": "0498", "nombre": "Fungicida", "precio": 850.00, "vencimiento": "2032-08-27"},
+    {"id": "0499", "nombre": "Trampa para plagas", "precio": 600.00, "vencimiento": "2032-09-01"},
+    {"id": "0500", "nombre": "Ahuyentador de insectos", "precio": 700.00, "vencimiento": "2032-09-06"}
+]
+
+lista_10_minusculas = productos_en_minusculas(lista_productos_10)
+lista_100_minusculas = productos_en_minusculas(lista_productos_100)
+lista_500_minusculas = productos_en_minusculas(lista_productos_500)
+
 nombre_producto = input("Buscar producto por nombre: ").lower()
 
-# Búsquedas lineales
+# BUQUEDAS LINEALES
+
+# Busqueda lineal para 10 productos
 resultado_de_10 = buscar_por_nombre_lineal(lista_productos_10, nombre_producto)
 print("Búsqueda lineal entre 10 productos")
-print(resultado_de_10)
+print(resultado_de_10[0])
 
+print("Tiempo promedio tras 100 repeticiones")
+tiempo_promedio = medir_tiempo_promedio(buscar_por_nombre_lineal, lista_productos_10, nombre_producto, repeticiones=100)
+print(tiempo_promedio)
+
+# Busqueda lineal para 100 productos
 resultado_de_100 = buscar_por_nombre_lineal(lista_productos_100, nombre_producto)
 print("Búsqueda lineal entre 100 productos")
-print(resultado_de_100)
+print(resultado_de_100[0])
 
-# Búsquedas binarias (En este apartado se utiliza sorted() para ordenar ya que el objetivo es comparar solo los métodos de búsqueda)
+print("Tiempo promedio tras 100 repeticiones")
+tiempo_promedio = medir_tiempo_promedio(buscar_por_nombre_lineal, lista_productos_100, nombre_producto, repeticiones=100)
+print(tiempo_promedio)
+
+# BUSQUEDAS BINARIAS (En este apartado se utiliza sorted() para ordenar ya que el objetivo es comparar solo los métodos de búsqueda)
 
 lista_productos_10 = sorted(lista_productos_10, key=clave_ordenamiento) # Ordeno la lista de 10 productos por nombre.
 
+# Búsqueda binaria para 10 productos
 resultado_de_10 = buscar_por_nombre_binario(lista_productos_10, nombre_producto)
 print("Búsqueda binaria entre 10 productos")
-print(resultado_de_10)
+print(resultado_de_10[0])
+
+print("Tiempo promedio tras 100 repeticiones")
+tiempo_promedio = medir_tiempo_promedio(buscar_por_nombre_binario, lista_productos_10, nombre_producto, repeticiones=100)
+print(tiempo_promedio)
+
 
 lista_productos_100 = sorted(lista_productos_100, key=clave_ordenamiento) # Ordeno la lista de 100 productos por nombre.
 
+# Búsqueda binaria para 100 productos
 resultado_de_100 = buscar_por_nombre_binario(lista_productos_100, nombre_producto)
 print("Búsqueda binaria entre 100 productos")
-print(resultado_de_100)
+print(resultado_de_100[0])
+
+print("Tiempo promedio tras 100 repeticiones")
+tiempo_promedio = medir_tiempo_promedio(buscar_por_nombre_binario, lista_productos_100, nombre_producto, repeticiones=100)
+print(tiempo_promedio)
+
+
