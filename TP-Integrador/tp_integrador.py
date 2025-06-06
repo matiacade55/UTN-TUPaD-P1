@@ -1,4 +1,4 @@
-import time
+import timeit
 
 def productos_en_minusculas(lista):
     for producto in lista:
@@ -7,24 +7,17 @@ def productos_en_minusculas(lista):
 
 def buscar_por_nombre_lineal(lista, nombre):
 
-    start = time.perf_counter()
-
     for producto in lista:
 
-        if producto["nombre"]== nombre:
-            end = time.perf_counter()
-            return producto, (end - start) * 1000
-        
-    end = time.perf_counter()
+        if producto["nombre"] == nombre:
+            return producto
     
-    return None, (end - start) * 1000
+    return None
 
 def clave_ordenamiento(lista):
     return lista["nombre"]
 
 def buscar_por_nombre_binario(lista, nombre):
-
-    start = time.perf_counter()
 
     inicio = 0
     final = len(lista) - 1
@@ -35,21 +28,19 @@ def buscar_por_nombre_binario(lista, nombre):
         nombre_buscado = nombre
 
         if nombre_medio == nombre_buscado:
-            end = time.perf_counter()
-            return lista[medio], (end - start) * 1000 # Devuelve el producto encontrado en la posición medio
+            return lista[medio] # Devuelve el producto encontrado en la posición medio
         elif nombre_medio < nombre_buscado:
             inicio = medio + 1 # Corremos el inicio hacia la derecha (el buscado esta en la mitad de la derecha)
         else:
             final = medio - 1 # Corremos el final hacia la izquierda (el buscado esta en la mitad de la izquierda)
     
-    return None, (end - start) * 1000
+    return None
 
-def medir_tiempo_promedio(funcion, lista, nombre, repeticiones=1000):
-    total_tiempo = 0
-    for _ in range(repeticiones):
-        _, tiempo = funcion(lista, nombre)
-        total_tiempo += tiempo
-    return total_tiempo / repeticiones
+def medir_tiempo_promedio(funcion, repeticiones=1000):
+    
+    tiempo_total = timeit.timeit(funcion, number=repeticiones)
+
+    return (tiempo_total / repeticiones) * 1000  # Devuelve el tiempo en milisegundos
 
 lista_productos_10 = [
     {"id": "0001", "nombre": "Aceite", "precio": 2500.00, "vencimiento": "2025-11-05"},
@@ -681,20 +672,22 @@ nombre_producto = input("Buscar producto por nombre: ").lower()
 # Busqueda lineal para 10 productos
 resultado_de_10 = buscar_por_nombre_lineal(lista_productos_10, nombre_producto)
 print("Búsqueda lineal entre 10 productos")
-print(resultado_de_10[0])
+print(resultado_de_10)
 
-print("Tiempo promedio tras 100 repeticiones")
-tiempo_promedio = medir_tiempo_promedio(buscar_por_nombre_lineal, lista_productos_10, nombre_producto, repeticiones=100)
+print("Tiempo promedio")
+tiempo_promedio = medir_tiempo_promedio(lambda: buscar_por_nombre_lineal(lista_productos_10, nombre_producto))
 print(tiempo_promedio)
 
 # Busqueda lineal para 100 productos
 resultado_de_100 = buscar_por_nombre_lineal(lista_productos_100, nombre_producto)
 print("Búsqueda lineal entre 100 productos")
-print(resultado_de_100[0])
+print(resultado_de_100)
 
-print("Tiempo promedio tras 100 repeticiones")
-tiempo_promedio = medir_tiempo_promedio(buscar_por_nombre_lineal, lista_productos_100, nombre_producto, repeticiones=100)
+print("Tiempo promedio")
+tiempo_promedio = medir_tiempo_promedio(lambda: buscar_por_nombre_lineal(lista_productos_100, nombre_producto))
 print(tiempo_promedio)
+
+#----------------------------------------------------------------------------------------------------------------------------------
 
 # BUSQUEDAS BINARIAS (En este apartado se utiliza sorted() para ordenar ya que el objetivo es comparar solo los métodos de búsqueda)
 
@@ -703,10 +696,10 @@ lista_productos_10 = sorted(lista_productos_10, key=clave_ordenamiento) # Ordeno
 # Búsqueda binaria para 10 productos
 resultado_de_10 = buscar_por_nombre_binario(lista_productos_10, nombre_producto)
 print("Búsqueda binaria entre 10 productos")
-print(resultado_de_10[0])
+print(resultado_de_10)
 
-print("Tiempo promedio tras 100 repeticiones")
-tiempo_promedio = medir_tiempo_promedio(buscar_por_nombre_binario, lista_productos_10, nombre_producto, repeticiones=100)
+print("Tiempo promedio")
+tiempo_promedio = medir_tiempo_promedio(lambda: buscar_por_nombre_binario(lista_productos_10, nombre_producto))
 print(tiempo_promedio)
 
 
@@ -715,10 +708,10 @@ lista_productos_100 = sorted(lista_productos_100, key=clave_ordenamiento) # Orde
 # Búsqueda binaria para 100 productos
 resultado_de_100 = buscar_por_nombre_binario(lista_productos_100, nombre_producto)
 print("Búsqueda binaria entre 100 productos")
-print(resultado_de_100[0])
+print(resultado_de_100)
 
-print("Tiempo promedio tras 100 repeticiones")
-tiempo_promedio = medir_tiempo_promedio(buscar_por_nombre_binario, lista_productos_100, nombre_producto, repeticiones=100)
+print("Tiempo promedio")
+tiempo_promedio = medir_tiempo_promedio(lambda: buscar_por_nombre_binario(lista_productos_100, nombre_producto))
 print(tiempo_promedio)
 
 
