@@ -1,5 +1,6 @@
 import timeit
 
+#FUNCIONES DE BUSQUEDA
 def productos_en_minusculas(lista):
     for producto in lista:
         producto["nombre"] = producto["nombre"].lower()
@@ -35,6 +36,18 @@ def buscar_por_nombre_binario(lista, nombre):
             final = medio - 1 # Corremos el final hacia la izquierda (el buscado esta en la mitad de la izquierda)
     
     return None
+
+#FUNCIONES DE ORDENAMIENTO
+
+def bubble_sort(lista,key):
+    for i in range(len(lista)):
+        for j in range(len(lista) - 1 - i):
+            if lista[j][key] > lista[j + 1][key]:
+                lista[j], lista[j + 1] = lista[j + 1], lista[j]
+    
+    return lista
+
+#FUNCIÓN PARA MEDIR TIEMPOS
 
 def medir_tiempo_promedio(funcion, repeticiones=1000):
     
@@ -670,8 +683,8 @@ nombre_producto = input("Buscar producto por nombre: ").lower()
 # BUQUEDAS LINEALES
 
 # Busqueda lineal para 10 productos
-resultado_de_10 = buscar_por_nombre_lineal(lista_productos_10, nombre_producto)
 print("Búsqueda lineal entre 10 productos")
+resultado_de_10 = buscar_por_nombre_lineal(lista_productos_10, nombre_producto)
 print(resultado_de_10)
 
 print("Tiempo promedio")
@@ -679,8 +692,8 @@ tiempo_promedio = medir_tiempo_promedio(lambda: buscar_por_nombre_lineal(lista_p
 print(tiempo_promedio)
 
 # Busqueda lineal para 100 productos
-resultado_de_100 = buscar_por_nombre_lineal(lista_productos_100, nombre_producto)
 print("Búsqueda lineal entre 100 productos")
+resultado_de_100 = buscar_por_nombre_lineal(lista_productos_100, nombre_producto)
 print(resultado_de_100)
 
 print("Tiempo promedio")
@@ -691,27 +704,44 @@ print(tiempo_promedio)
 
 # BUSQUEDAS BINARIAS (En este apartado se utiliza sorted() para ordenar ya que el objetivo es comparar solo los métodos de búsqueda)
 
-lista_productos_10 = sorted(lista_productos_10, key=clave_ordenamiento) # Ordeno la lista de 10 productos por nombre.
-
 # Búsqueda binaria para 10 productos
-resultado_de_10 = buscar_por_nombre_binario(lista_productos_10, nombre_producto)
 print("Búsqueda binaria entre 10 productos")
+lista_productos_10 = sorted(lista_productos_10, key=clave_ordenamiento) # Ordeno la lista de 10 productos por nombre.
+resultado_de_10 = buscar_por_nombre_binario(lista_productos_10, nombre_producto)
 print(resultado_de_10)
 
 print("Tiempo promedio")
 tiempo_promedio = medir_tiempo_promedio(lambda: buscar_por_nombre_binario(lista_productos_10, nombre_producto))
 print(tiempo_promedio)
 
-
-lista_productos_100 = sorted(lista_productos_100, key=clave_ordenamiento) # Ordeno la lista de 100 productos por nombre.
-
 # Búsqueda binaria para 100 productos
-resultado_de_100 = buscar_por_nombre_binario(lista_productos_100, nombre_producto)
 print("Búsqueda binaria entre 100 productos")
+lista_productos_100 = sorted(lista_productos_100, key=clave_ordenamiento) # Ordeno la lista de 100 productos por nombre.
+resultado_de_100 = buscar_por_nombre_binario(lista_productos_100, nombre_producto)
 print(resultado_de_100)
 
 print("Tiempo promedio")
 tiempo_promedio = medir_tiempo_promedio(lambda: buscar_por_nombre_binario(lista_productos_100, nombre_producto))
 print(tiempo_promedio)
 
+#-----------------------------------------------------------------------------------------------------------------
 
+# ORDENAMIENTO BUBBLE SORT
+
+# Bubble Sort con 10 productos
+print("Ordenamiento Bubble Sort 10 productos")
+resultado = bubble_sort(lista_productos_10, "nombre")
+print(resultado)
+
+print("Tiempo promedio")
+tiempo_promedio = medir_tiempo_promedio(lambda:bubble_sort(lista_productos_10, "nombre"))
+print(tiempo_promedio)
+
+# Bubble Sort con 10 productos
+print("Ordenamiento Bubble Sort 100 productos")
+resultado = bubble_sort(lista_productos_100, "nombre")
+print(resultado)
+
+print("Tiempo promedio")
+tiempo_promedio = medir_tiempo_promedio(lambda:bubble_sort(lista_productos_100, "nombre"))
+print(tiempo_promedio)
