@@ -1,81 +1,13 @@
 import timeit
+from utils_busqueda import buscar_por_nombre_lineal, buscar_por_nombre_binario, clave_ordenamiento
+from utils_ordenamiento import bubble_sort, quick_sort
+from utils_tiempo import medir_tiempo_promedio
 
-#FUNCIONES DE BUSQUEDA
+# FUNCIÓN PASAR NOMBRES DE PRODUCTOS A MINÚSCULAS
 def productos_en_minusculas(lista):
     for producto in lista:
         producto["nombre"] = producto["nombre"].lower()
     return lista
-
-def buscar_por_nombre_lineal(lista, nombre):
-
-    for producto in lista:
-
-        if producto["nombre"] == nombre:
-            return producto
-    
-    return None
-
-def clave_ordenamiento(lista):
-    return lista["nombre"]
-
-def buscar_por_nombre_binario(lista, nombre):
-
-    inicio = 0
-    final = len(lista) - 1
-
-    while inicio <= final:
-        medio = (inicio + final) // 2 # Encontramos el punto medio de la lista
-        nombre_medio = lista[medio]["nombre"] # Obtenemos el nombre del producto que esta en el medio.
-        nombre_buscado = nombre
-
-        if nombre_medio == nombre_buscado:
-            return lista[medio] # Devuelve el producto encontrado en la posición medio
-        elif nombre_medio < nombre_buscado:
-            inicio = medio + 1 # Corremos el inicio hacia la derecha (el buscado esta en la mitad de la derecha)
-        else:
-            final = medio - 1 # Corremos el final hacia la izquierda (el buscado esta en la mitad de la izquierda)
-    
-    return None
-
-#FUNCIONES DE ORDENAMIENTO
-
-def bubble_sort(lista,key):
-    for i in range(len(lista)):
-        for j in range(len(lista) - 1 - i):
-            if lista[j][key] > lista[j + 1][key]:
-                lista[j], lista[j + 1] = lista[j + 1], lista[j]
-    
-    return lista
-
-def quick_sort(lista, key):
-    # caso base
-    if len(lista) <= 1:
-        return lista
-    
-    # paso recursivo
-    pivote = lista.pop() # Usamos el último elemento como pivote
-    lista1 = []
-    lista2 = []
-
-    for e in lista:
-        if e[key] <= pivote[key]:
-            lista1.append(e)
-        else:
-            lista2.append(e)
-    
-    lista1 = quick_sort(lista1, key)
-    lista2 = quick_sort(lista2, key)
-
-    return lista1 + [pivote] + lista2 # pivote se concatena como una lista de un elemento
-
-
-#FUNCIÓN PARA MEDIR TIEMPOS
-
-def medir_tiempo_promedio(funcion, repeticiones=1000):
-    
-    tiempo_total = timeit.timeit(funcion, number=repeticiones)
-
-    return (tiempo_total / repeticiones) * 1000  # Devuelve el tiempo en milisegundos
 
 lista_productos_10 = [
     {"id": "0001", "nombre": "Aceite", "precio": 2500.00, "vencimiento": "2025-11-05"},
