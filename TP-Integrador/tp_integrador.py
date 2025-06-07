@@ -47,6 +47,28 @@ def bubble_sort(lista,key):
     
     return lista
 
+def quick_sort(lista, key):
+    # caso base
+    if len(lista) <= 1:
+        return lista
+    
+    # paso recursivo
+    pivote = lista.pop() # Usamos el último elemento como pivote
+    lista1 = []
+    lista2 = []
+
+    for e in lista:
+        if e[key] <= pivote[key]:
+            lista1.append(e)
+        else:
+            lista2.append(e)
+    
+    lista1 = quick_sort(lista1, key)
+    lista2 = quick_sort(lista2, key)
+
+    return lista1 + [pivote] + lista2 # pivote se concatena como una lista de un elemento
+
+
 #FUNCIÓN PARA MEDIR TIEMPOS
 
 def medir_tiempo_promedio(funcion, repeticiones=1000):
@@ -728,20 +750,53 @@ print(tiempo_promedio)
 
 # ORDENAMIENTO BUBBLE SORT
 
+opcion = int(input("Elegí una opción de búsqueda: 1. Nombre, 2. Precio, 3. Vencimiento: "))
+
+if opcion == 1:
+    opcion = "nombre"
+elif opcion == 2:
+    opcion = "precio"
+elif opcion == 3:
+    opcion = "vencimiento"
+else: 
+    print("Error. EL número ingresado no es válido")
+
 # Bubble Sort con 10 productos
 print("Ordenamiento Bubble Sort 10 productos")
-resultado = bubble_sort(lista_productos_10, "nombre")
+resultado = bubble_sort(lista_productos_10, opcion)
 print(resultado)
 
 print("Tiempo promedio")
-tiempo_promedio = medir_tiempo_promedio(lambda:bubble_sort(lista_productos_10, "nombre"))
+tiempo_promedio = medir_tiempo_promedio(lambda:bubble_sort(lista_productos_10, opcion))
 print(tiempo_promedio)
 
-# Bubble Sort con 10 productos
+# Bubble Sort con 100 productos
 print("Ordenamiento Bubble Sort 100 productos")
-resultado = bubble_sort(lista_productos_100, "nombre")
+resultado = bubble_sort(lista_productos_100, opcion)
 print(resultado)
 
 print("Tiempo promedio")
-tiempo_promedio = medir_tiempo_promedio(lambda:bubble_sort(lista_productos_100, "nombre"))
+tiempo_promedio = medir_tiempo_promedio(lambda:bubble_sort(lista_productos_100, opcion))
+print(tiempo_promedio)
+
+#-----------------------------------------------------------------------------------------------------------------
+
+# ORDENAMIENTO QUICK SORT
+
+# Quick Sort con 10 productos
+print("Ordenamiento Quick Sort 10 productos")
+resultado = quick_sort(lista_productos_10, opcion)
+print(resultado)
+
+print("Tiempo promedio")
+tiempo_promedio = medir_tiempo_promedio(lambda:quick_sort(lista_productos_10, opcion))
+print(tiempo_promedio)
+
+# Quick Sort con 100 productos
+print("Ordenamiento Quick Sort 100 productos")
+resultado = quick_sort(lista_productos_100, opcion)
+print(resultado)
+
+print("Tiempo promedio")
+tiempo_promedio = medir_tiempo_promedio(lambda:quick_sort(lista_productos_100, opcion))
 print(tiempo_promedio)
