@@ -4,13 +4,14 @@ def buscar_por_nombre_lineal(lista, nombre):
 
     for producto in lista:
 
+        # Si el valor de la clave "nombre" == nombre(ingresado por el usuario)
         if producto["nombre"] == nombre:
             return producto
     
     return None
 
-def clave_ordenamiento(lista):
-    return lista["nombre"]
+def clave_ordenamiento(producto):
+    return producto["nombre"] # Le indica a sorted() por cuál clave debe ordenar
 
 def buscar_por_nombre_binario(lista, nombre):
 

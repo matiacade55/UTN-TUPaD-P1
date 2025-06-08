@@ -3,12 +3,49 @@ from utils_busqueda import buscar_por_nombre_lineal, buscar_por_nombre_binario, 
 from utils_ordenamiento import bubble_sort, quick_sort
 from utils_tiempo import medir_tiempo_promedio
 
-# FUNCIÓN PASAR NOMBRES DE PRODUCTOS A MINÚSCULAS
+# Función para pasar nombres a minúsculas
 def productos_en_minusculas(lista):
     for producto in lista:
         producto["nombre"] = producto["nombre"].lower()
     return lista
 
+def preguntar_opcion():
+
+    opcion = 0
+
+    while opcion < 1 or opcion > 4:
+        opcion = int(input("Por favor selecciona una opción de búsqueda:\n"
+                "1. Nombre\n"
+                "2. Precio.\n"
+                "3. Vencimiento.\n"
+                "4. Finalizar programa.\n"
+            ))
+        if opcion < 1 or opcion > 4:
+            print("La opción seleccionada es incorrecta")
+    if opcion == 1:
+        opcion = "nombre"
+    elif opcion == 2:
+        opcion = "precio"
+    elif opcion == 3:
+        opcion = "vencimiento"
+    elif opcion == 4:
+        exit()
+            
+    return opcion
+
+def mostrar_producto(producto):
+    if producto:
+        print(f"Id: {producto['id']} - Nombre: {producto['nombre']} - Precio: ${producto['precio']} - Vencimiento: {producto['vencimiento']}")
+    elif producto == None:
+        print("Producto no encontrado")
+
+def mostrar_lista_ordenada(lista_ordenada):
+    for producto in lista_ordenada:
+        mostrar_producto(producto)
+
+# Programa Principal
+
+# Listas de distintos tamaños
 lista_productos_10 = [
     {"id": "0001", "nombre": "Aceite", "precio": 2500.00, "vencimiento": "2025-11-05"},
     {"id": "0002", "nombre": "Arroz", "precio": 1200.50, "vencimiento": "2026-01-15"},
@@ -628,107 +665,102 @@ lista_productos_500 = [
     {"id": "0500", "nombre": "Ahuyentador de insectos", "precio": 700.00, "vencimiento": "2032-09-06"}
 ]
 
+# Listas con los nombres de los productos en minúsculas
 lista_10_minusculas = productos_en_minusculas(lista_productos_10)
 lista_100_minusculas = productos_en_minusculas(lista_productos_100)
 lista_500_minusculas = productos_en_minusculas(lista_productos_500)
 
+# El usuario ingresa el producto a buscar
 nombre_producto = input("Buscar producto por nombre: ").lower()
 
 # BUQUEDAS LINEALES
 
 # Busqueda lineal para 10 productos
-print("Búsqueda lineal entre 10 productos")
-resultado_de_10 = buscar_por_nombre_lineal(lista_productos_10, nombre_producto)
-print(resultado_de_10)
+print("---Búsqueda lineal entre 10 productos---")
+producto_entre_10 = buscar_por_nombre_lineal(lista_productos_10, nombre_producto)
+mostrar_producto(producto_entre_10)
 
 print("Tiempo promedio")
 tiempo_promedio = medir_tiempo_promedio(lambda: buscar_por_nombre_lineal(lista_productos_10, nombre_producto))
-print(tiempo_promedio)
+print(f"{tiempo_promedio}\n")
 
 # Busqueda lineal para 100 productos
-print("Búsqueda lineal entre 100 productos")
-resultado_de_100 = buscar_por_nombre_lineal(lista_productos_100, nombre_producto)
-print(resultado_de_100)
+print("---Búsqueda lineal entre 100 productos---")
+producto_entre_100 = buscar_por_nombre_lineal(lista_productos_100, nombre_producto)
+mostrar_producto(producto_entre_100)
 
 print("Tiempo promedio")
 tiempo_promedio = medir_tiempo_promedio(lambda: buscar_por_nombre_lineal(lista_productos_100, nombre_producto))
-print(tiempo_promedio)
+print(f"{tiempo_promedio}\n")
 
 #----------------------------------------------------------------------------------------------------------------------------------
 
 # BUSQUEDAS BINARIAS (En este apartado se utiliza sorted() para ordenar ya que el objetivo es comparar solo los métodos de búsqueda)
 
 # Búsqueda binaria para 10 productos
-print("Búsqueda binaria entre 10 productos")
+print("---Búsqueda binaria entre 10 productos---")
 lista_productos_10 = sorted(lista_productos_10, key=clave_ordenamiento) # Ordeno la lista de 10 productos por nombre.
 resultado_de_10 = buscar_por_nombre_binario(lista_productos_10, nombre_producto)
-print(resultado_de_10)
+mostrar_producto(resultado_de_10)
 
 print("Tiempo promedio")
 tiempo_promedio = medir_tiempo_promedio(lambda: buscar_por_nombre_binario(lista_productos_10, nombre_producto))
-print(tiempo_promedio)
+print(f"{tiempo_promedio}\n")
 
 # Búsqueda binaria para 100 productos
-print("Búsqueda binaria entre 100 productos")
+print("---Búsqueda binaria entre 100 productos---")
 lista_productos_100 = sorted(lista_productos_100, key=clave_ordenamiento) # Ordeno la lista de 100 productos por nombre.
 resultado_de_100 = buscar_por_nombre_binario(lista_productos_100, nombre_producto)
-print(resultado_de_100)
+mostrar_producto(resultado_de_100)
 
 print("Tiempo promedio")
 tiempo_promedio = medir_tiempo_promedio(lambda: buscar_por_nombre_binario(lista_productos_100, nombre_producto))
-print(tiempo_promedio)
+print(f"{tiempo_promedio}\n")
 
 #-----------------------------------------------------------------------------------------------------------------
 
 # ORDENAMIENTO BUBBLE SORT
 
-opcion = int(input("Elegí una opción de búsqueda: 1. Nombre, 2. Precio, 3. Vencimiento: "))
-
-if opcion == 1:
-    opcion = "nombre"
-elif opcion == 2:
-    opcion = "precio"
-elif opcion == 3:
-    opcion = "vencimiento"
-else: 
-    print("Error. EL número ingresado no es válido")
+# Preguntar al usuario por qué criterio quiere buscar
+opcion = preguntar_opcion()
 
 # Bubble Sort con 10 productos
-print("Ordenamiento Bubble Sort 10 productos")
+print("---Ordenamiento Bubble Sort 10 productos---")
 resultado = bubble_sort(lista_productos_10, opcion)
-print(resultado)
+mostrar_lista_ordenada(resultado)
 
 print("Tiempo promedio")
 tiempo_promedio = medir_tiempo_promedio(lambda:bubble_sort(lista_productos_10, opcion))
-print(tiempo_promedio)
+print(f"{tiempo_promedio}\n")
 
 # Bubble Sort con 100 productos
-print("Ordenamiento Bubble Sort 100 productos")
+print("---Ordenamiento Bubble Sort 100 productos---")
 resultado = bubble_sort(lista_productos_100, opcion)
-print(resultado)
+mostrar_lista_ordenada(resultado)
 
 print("Tiempo promedio")
 tiempo_promedio = medir_tiempo_promedio(lambda:bubble_sort(lista_productos_100, opcion))
-print(tiempo_promedio)
+print(f"{tiempo_promedio}\n")
 
-#-----------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------
 
 # ORDENAMIENTO QUICK SORT
 
 # Quick Sort con 10 productos
-print("Ordenamiento Quick Sort 10 productos")
+print("---Ordenamiento Quick Sort 10 productos---")
 resultado = quick_sort(lista_productos_10, opcion)
-print(resultado)
+mostrar_lista_ordenada(resultado)
 
 print("Tiempo promedio")
 tiempo_promedio = medir_tiempo_promedio(lambda:quick_sort(lista_productos_10, opcion))
-print(tiempo_promedio)
+print(f"{tiempo_promedio}\n")
 
 # Quick Sort con 100 productos
-print("Ordenamiento Quick Sort 100 productos")
+print("---Ordenamiento Quick Sort 100 productos---")
 resultado = quick_sort(lista_productos_100, opcion)
-print(resultado)
+mostrar_lista_ordenada(resultado)
 
 print("Tiempo promedio")
 tiempo_promedio = medir_tiempo_promedio(lambda:quick_sort(lista_productos_100, opcion))
-print(tiempo_promedio)
+print(f"{tiempo_promedio}\n")
+
