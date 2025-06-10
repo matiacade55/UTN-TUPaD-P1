@@ -2,7 +2,7 @@ import timeit
 
 #FUNCIÓN PARA MEDIR TIEMPOS
 
-def medir_tiempo_promedio(funcion, repeticiones=1000):
+def medir_tiempo_promedio(funcion, repeticiones=10000):
     
     tiempo_total = timeit.timeit(funcion, number=repeticiones)
 

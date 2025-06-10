@@ -1,4 +1,20 @@
+from utils_tiempo import medir_tiempo_promedio
+from utils_formato_salidas import mostrar_producto
+
 #FUNCIONES DE BUSQUEDA
+
+def busqueda_general(nombre_busqueda, funcion_busqueda, lista, nombre_producto):
+    print(f"{nombre_busqueda}")
+
+    if funcion_busqueda.__name__ == "buscar_por_nombre_binaria": # Si es búsqueda binaria ordenamos la lista
+        lista = sorted(lista, key=clave_ordenamiento)
+
+    resultado = funcion_busqueda(lista, nombre_producto) # Buscarmos el producto
+    mostrar_producto(resultado) # Lo mostramos formateado
+
+    tiempo = medir_tiempo_promedio(lambda: funcion_busqueda(lista, nombre_producto)) # Medición del tiempo promedio
+    print(f"Tiempo promedio: {tiempo:.6f} ms\n")
+    
 
 def buscar_por_nombre_lineal(lista, nombre):
 
@@ -13,7 +29,7 @@ def buscar_por_nombre_lineal(lista, nombre):
 def clave_ordenamiento(producto):
     return producto["nombre"] # Le indica a sorted() por cuál clave debe ordenar
 
-def buscar_por_nombre_binario(lista, nombre):
+def buscar_por_nombre_binaria(lista, nombre):
 
     inicio = 0
     final = len(lista) - 1
